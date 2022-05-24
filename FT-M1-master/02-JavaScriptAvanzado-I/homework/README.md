@@ -13,7 +13,7 @@ var a = 5;
 var b = 10;
 var c = function(a, b, c) {
   var x = 10;
-  console.log(x);
+  console.log(x);//10
   console.log(a);
   var f = function(a, b, c) {
     b = a;
