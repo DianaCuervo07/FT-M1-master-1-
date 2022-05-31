@@ -10,10 +10,92 @@ Implementar la clase LinkedList, definiendo los siguientes métodos:
   search(isEven), donde isEven es una función que retorna true cuando recibe por parámetro un número par, busca un nodo cuyo valor sea un número par.
   En caso de que la búsqueda no arroje resultados, search debe retornar null.
 */
+function LinkedList() {
+  this.length = 0;
+  this.head = null;
+​
+  
+}
+​
+function Node(value) {
+  this.value = value;
+  this.next = null;
+​
+}
+​
+LinkedList.prototype.add = function(value){
+ let nuevoNodo = new Node (value)
+ let current = this.head
+​
+ if(!current) { //vacio
+  this.head = nuevoNodo
+  this.length++
+  return nuevoNodo
+ }
+ while (current.next){
+  current = current.next
+}
+current.next= nuevoNodo
+this.length++
+return nuevoNodo
+​
+}
+​
+//- remove: elimina el último nodo de la lista y retorna su valor (tener en cuenta el caso particular de una lista de un solo nodo y de una lista vacía);
+LinkedList.prototype.remove = function(){
+ //evaluo que no tenga nada la lista
+ if (!this.head){
+   return null
+ }
+// evaluo que la lista tenga un solo nodo
+ if( this.head.next === null){
+   let valorNodo = this.head.value
+   this.head = null
+   return valorNodo
+ }
+   //evaluo dos o mas nodos
+   var current = this.head
+   while (current.next.next) {
+     current =current.next
+   }
+   var posteriorNodo= current.next.value
+   current.next =null
+   this.length--
+   return posteriorNodo
+ ​
+ }
+ ​
+ /* - search: recibe un parámetro y lo busca dentro de la lista, con una particularidad: el parámetro puede ser un valor o un callback. En el primer caso, buscamos un nodo cuyo valor coincida con lo buscado; en el segundo, buscamos un nodo cuyo valor, al ser pasado como parámetro del callback, retorne true. 
+ Ejemplo: 
+ search(3) busca un nodo cuyo valor sea 3;
+ search(isEven), donde isEven es una función que retorna true cuando recibe por parámetro un número par, busca un nodo cuyo valor sea un número par.
+ En caso de que la búsqueda no arroje resultados, search debe retornar null.
+ */
+ LinkedList.prototype.search = function(dato){
+  ​
+    if (!this.head){
+      return null
+    }
+    let current = this.head
+    while (current) {
+  ​
+      if (typeof dato === "function") {
+        if(dato(current.value)){
+          return current.value
+        }
+      }else if(current.value === dato){
+        
+        return dato
+      }
+     
+      current =current.next
+    }
+    
+    return null;
+  ​
+    
+  }
 
-function LinkedList() {}
-
-function Node(value) {}
 
 /*
 Implementar la clase HashTable.
@@ -30,11 +112,56 @@ La clase debe tener los siguientes métodos:
 Ejemplo: supongamos que quiero guardar {instructora: 'Ani'} en la tabla. Primero puedo chequear, con hasKey, si ya hay algo en la tabla con el nombre 'instructora'; luego, invocando set('instructora', 'Ani'), se almacenará el par clave-valor en un bucket específico (determinado al hashear la clave)
 */
 
-function HashTable() {}
-
+function HashTable() {
+  this.buckets =[];
+  this.numBuckets = 35;
+  this.buckets.length = this.numBuckets;
+}
+​
+HashTable.prototype.hash = function ( input){
+  let code= 0;
+​
+  for (let i = 0; i < input.length; i++) {
+    code = code +  input.charCodeAt(i)
+  }
+  
+  let posicionHash = code % this.numBuckets;
+  return posicionHash;
+​
+}
+​
+HashTable.prototype.set = function (clave, valor){
+​
+  if (typeof clave !== "string") {
+    throw new TypeError ('Keys must be strings')
+  }
+​
+  let i = this.hash(clave)
+  if(this.buckets[i] === undefined)
+  {this.buckets[i] ={}
+  }
+  this.buckets[i][clave]= valor
+ 
+}
+​
+HashTable.prototype.get = function (clave){
+​
+  let i = this.hash(clave)
+ return this.buckets[i].clave;
+  
+​
+}
+HashTable.prototype.hasKey = function (clave){
+​
+  let p = this.hash(clave)
+  return this.buckets[p].hasOwnProperty(clave)
+ 
+};
+   
+​
 // No modifiquen nada debajo de esta linea
 // --------------------------------
-
+​
 module.exports = {
   Node,
   LinkedList,
